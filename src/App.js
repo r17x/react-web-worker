@@ -1,11 +1,31 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {
+  //useMemo,
+  useState,
+  useEffect,
+  Component
+} from "react";
+import logo from "./logo.svg";
+import "./App.css";
+
+function W0rker(props) {
+  const { url } = props;
+  const [message, setMessage] = useState([]);
+
+  console.log("Normal People");
+  useEffect(() => {
+    const worker = new Worker(url);
+    worker.onmessage = ({ data }) => setMessage(message.concat([data]));
+    worker.postMessage(["fetch", "https://api.github.com/users"]);
+  }, []);
+
+  return JSON.stringify(message);
+}
 
 class App extends Component {
   render() {
     return (
       <div className="App">
+        <W0rker url="rin-worker.js" />
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
